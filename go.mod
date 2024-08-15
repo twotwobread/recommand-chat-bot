@@ -4,6 +4,7 @@ go 1.22.5
 
 require (
 	ariga.io/atlas v0.26.0 // indirect
+	ariga.io/entviz v0.0.0-20230419175438-29569ec22220 // indirect
 	entgo.io/ent v0.14.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
