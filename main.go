@@ -9,9 +9,14 @@ import (
 )
 
 func main() {
-	app := fiber.New()
+	app := setupApp()
 	restMapping(app)
 	log.Fatal(app.Listen(":5003"))
+}
+
+func setupApp() *fiber.App {
+	app := fiber.New()
+	return app
 }
 
 func restMapping(a *fiber.App) {
