@@ -30,6 +30,15 @@ const (
 	Western        Genre = "서부"
 )
 
+func (g Genre) IsValid() bool {
+	switch g {
+	case Action, Adventure, Animation, Comedy, Crime, Documentary, Drama, Family, Fantasy,
+		History, Horror, Music, Mystery, Romance, ScienceFiction, TVMovie, Thriller, War, Western:
+		return true
+	}
+	return false
+}
+
 type Movie struct {
 	ID          int64      `json:"id"`
 	Title       string     `json:"title"`
@@ -40,6 +49,15 @@ type Movie struct {
 	ReleaseDate CustomTime `json:"release_date"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	CreatedAt   time.Time  `json:"created_at"`
+}
+
+type CreateMovieInput struct {
+	Title       string     `json:"title"`
+	Genre       Genre      `json:"genre"`
+	Director    string     `json:"director"`
+	Actors      []string   `json:"actors"`
+	Description string     `json:"description"`
+	ReleaseDate CustomTime `json:"release_date"`
 }
 
 type CustomTime struct {
@@ -62,9 +80,11 @@ func (ct *CustomTime) UnmarshalJSON(b []byte) error {
 }
 
 type MovieUsecase interface {
+	Store(ctx context.Context, m *CreateMovieInput) (int64, error)
 	GetByID(ctx context.Context, id int64) (Movie, error)
-	Store(ctx context.Context, m *Movie) error
-	GetAll(ctx context.Context) ([]Movie, error)
 }
 
-type MovieRepository interface{}
+type MovieRepository interface {
+	Store(ctx context.Context, m *CreateMovieInput) (int64, error)
+	GetByID(ctx context.Context, id int64) (Movie, error)
+}
