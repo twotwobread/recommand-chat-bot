@@ -22,6 +22,9 @@ func (Movie) Fields() []ent.Field {
 		field.String("title").
 			NotEmpty().
 			StructTag(`json:"title"`),
+		field.String("genre").
+			NotEmpty().
+			StructTag(`json:"genre"`),
 		field.String("director").
 			NotEmpty().
 			StructTag(`json:"director"`),
