@@ -12,7 +12,7 @@ type movieRepository struct {
 	client *ent.Client
 }
 
-func NewMovieRepository(client *ent.Client) *movieRepository {
+func NewMovieRepository(client *ent.Client) domain.MovieRepository {
 	return &movieRepository{client: client}
 }
 
@@ -27,19 +27,19 @@ func (r *movieRepository) Store(ctx context.Context, m *domain.CreateMovieInput)
 		SetReleaseDate(m.ReleaseDate.Time).
 		Save(ctx)
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	return movie.ID, nil
 }
 
-func (r *movieRepository) GetByID(ctx context.Context, id int64) (*domain.Movie, error) {
+func (r *movieRepository) GetByID(ctx context.Context, id int64) (domain.Movie, error) {
 	m, err := r.client.Movie.
 		Query().
 		Where(movie.ID(id)).
 		Only(ctx)
 	if err != nil {
-		return nil, err
+		return domain.Movie{}, err
 	}
 
 	newMovie := domain.Movie{
@@ -53,5 +53,5 @@ func (r *movieRepository) GetByID(ctx context.Context, id int64) (*domain.Movie,
 		UpdatedAt:   m.UpdatedAt,
 		CreatedAt:   m.CreatedAt,
 	}
-	return &newMovie, nil
+	return newMovie, nil
 }
