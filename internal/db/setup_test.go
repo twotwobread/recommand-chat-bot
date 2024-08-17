@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestInitPostgreDB(t *testing.T) {
+func TestSetup_InitPostgreDB(t *testing.T) {
 	tests := []struct {
 		name    string
 		wantErr bool

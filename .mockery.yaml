@@ -1,0 +1,11 @@
+all: true
+dir: ./domain/mocks
+outpkg: mocks
+
+packages:
+  recommand-chat-bot/domain:
+    keeptrace: true
+    with-expecter: true
+    mockname: "{{.InterfaceName}}"
+    filename: "{{.InterfaceName}}.go"
+    disable-version-string: true

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"recommand-chat-bot/internal/db"
+	"recommand-chat-bot/internal/ent"
 	"recommand-chat-bot/internal/rest"
 
 	"github.com/gofiber/fiber/v3"
@@ -15,15 +16,13 @@ func main() {
 	app := setupApp()
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
-		panic(err)
+		log.Fatalf("Error loading .env file: %v", err)
 	}
 
 	profile := os.Getenv("PROFILE")
-	if profile == "prod" {
-		db.InitPostgreDB()
-	} else {
-		db.InitInMemDB()
+	client, err := getDBClient(profile)
+	if err != nil {
+		log.Fatalf("Error setup db: %v", err)
 	}
 
 	restMapping(app)
@@ -33,6 +32,13 @@ func main() {
 func setupApp() *fiber.App {
 	app := fiber.New()
 	return app
+}
+
+func getDBClient(profile string) (*ent.Client, error) {
+	if profile == "prod" {
+		return db.InitPostgreDB()
+	}
+	return db.InitInMemDB()
 }
 
 func restMapping(a *fiber.App) {
