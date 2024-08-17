@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
@@ -12,6 +11,7 @@ import (
 	"recommand-chat-bot/domain"
 	"recommand-chat-bot/internal/db"
 	"recommand-chat-bot/internal/ent"
+	"recommand-chat-bot/test/assertion"
 )
 
 type MovieRepoSuite struct {
@@ -31,33 +31,12 @@ func (suite *MovieRepoSuite) TearDownSuite() {
 	suite.client.Close()
 }
 
-func (suite *MovieRepoSuite) assertMovieInputFields(expected, actual *domain.Movie) {
-	// Reflection-based field comparison
-	vExpected := reflect.ValueOf(expected).Elem()
-	vActual := reflect.ValueOf(actual).Elem()
-
-	// Iterate over the struct fields and assert equality
-	for i := 0; i < vExpected.NumField(); i++ {
-		fieldName := vExpected.Type().Field(i).Name
-
-		// Skip auto-generated fields like ID, CreatedAt, UpdatedAt
-		if fieldName == "ID" || fieldName == "CreatedAt" || fieldName == "UpdatedAt" {
-			continue
-		}
-
-		expectedValue := vExpected.Field(i).Interface()
-		actualValue := vActual.Field(i).Interface()
-		suite.Equalf(expectedValue, actualValue, "Field %s should be equal", fieldName)
-	}
-}
-
 var releaseDate = domain.CustomTime{Time: time.Date(2023, 12, 15, 0, 0, 0, 0, time.UTC)}
 
-func (suite *MovieRepoSuite) TestMovieInMemRepositoryStore() {
+func (suite *MovieRepoSuite) TestMovieInMemRepository_Store() {
 	tests := []struct {
-		name    string
-		m       *domain.CreateMovieInput
-		wantErr bool
+		name string
+		m    *domain.CreateMovieInput
 	}{
 		{
 			name: "Success store movie",
@@ -69,7 +48,6 @@ func (suite *MovieRepoSuite) TestMovieInMemRepositoryStore() {
 				Description: "description",
 				ReleaseDate: releaseDate,
 			},
-			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
@@ -82,11 +60,10 @@ func (suite *MovieRepoSuite) TestMovieInMemRepositoryStore() {
 	}
 }
 
-func (suite *MovieRepoSuite) TestMovieInMemRepositoryGetByID() {
+func (suite *MovieRepoSuite) TestMovieInMemRepository_GetByID() {
 	tests := []struct {
-		name    string
-		m       *domain.CreateMovieInput
-		wantErr bool
+		name string
+		m    *domain.CreateMovieInput
 	}{
 		{
 			name: "Success store movie",
@@ -98,7 +75,6 @@ func (suite *MovieRepoSuite) TestMovieInMemRepositoryGetByID() {
 				Description: "description",
 				ReleaseDate: releaseDate,
 			},
-			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
@@ -114,7 +90,7 @@ func (suite *MovieRepoSuite) TestMovieInMemRepositoryGetByID() {
 			assert.False(suite.T(), movie.CreatedAt.IsZero(), "CreatedAt should be set by the database")
 			assert.False(suite.T(), movie.UpdatedAt.IsZero(), "UpdatedAt should be set by the database")
 
-			expectedMovie := &domain.Movie{
+			expectedMovie := domain.Movie{
 				Title:       tt.m.Title,
 				Genre:       tt.m.Genre,
 				Director:    tt.m.Director,
@@ -124,7 +100,7 @@ func (suite *MovieRepoSuite) TestMovieInMemRepositoryGetByID() {
 			}
 
 			// Compare user-provided fields only
-			suite.assertMovieInputFields(expectedMovie, movie)
+			assertion.AssertMovieInputFields(suite.T(), expectedMovie, movie)
 		})
 	}
 }
