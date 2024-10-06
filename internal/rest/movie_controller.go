@@ -30,16 +30,16 @@ func Store(c fiber.Ctx) error {
 	id, err := uc.Store(ctx, m)
 	if err != nil {
 		return fiber.NewError(
-			fiber.StatusBadRequest,
+			fiber.ErrInternalServerError.Code,
 			fmt.Sprintf("Wrong movie data to save in usecase: %s", err.Error()))
 	}
 
-	return c.Status(201).JSON(fiber.Map{"data": fiber.Map{"id": id}})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"data": fiber.Map{"id": id}})
 }
 
 func GetByID(c fiber.Ctx) error {
 	ctx := c.Context()
-	uc := c.Locals("MRepo").(domain.MovieRepository)
+	mr := c.Locals("MRepo").(domain.MovieRepository)
 
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
@@ -48,25 +48,38 @@ func GetByID(c fiber.Ctx) error {
 			fmt.Sprintf("Wrong movie id param (can't convert %s to int64): %s", c.Params("id"), err.Error()))
 	}
 
-	m, err := uc.GetByID(ctx, int64(id))
+	m, err := mr.GetByID(ctx, int64(id))
 	if err != nil {
 		return fiber.NewError(
-			fiber.StatusBadRequest,
+			fiber.ErrInternalServerError.Code,
 			fmt.Sprintf("Wrong view movie data in usecase: %s", err.Error()))
 	}
 
-	return c.Status(201).JSON(fiber.Map{"data": m})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"data": m})
 }
 
 func GetAll(c fiber.Ctx) error {
 	ctx := c.Context()
-	uc := c.Locals("MRepo").(domain.MovieRepository)
+	mr := c.Locals("MRepo").(domain.MovieRepository)
 
-	movies, err := uc.GetAll(ctx)
+	movies, err := mr.GetAll(ctx)
 	if err != nil {
 		return fiber.NewError(
-			fiber.StatusBadRequest,
+			fiber.ErrInternalServerError.Code,
 			fmt.Sprintf("Wrong view movie list data in usecase: %s", err.Error()))
 	}
-	return c.Status(201).JSON(fiber.Map{"data": movies})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"data": movies})
+}
+
+func GetRandom(c fiber.Ctx) error {
+	ctx := c.Context()
+	uc := c.Locals("MUC").(domain.MovieUsecase)
+
+	movie, err := uc.GetRandom(ctx)
+	if err != nil {
+		return fiber.NewError(
+			fiber.ErrInternalServerError.Code,
+			fmt.Sprintf("Wrong view random movie in usecase: %s", err.Error()))
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"data": movie})
 }
