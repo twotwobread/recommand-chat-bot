@@ -36,11 +36,11 @@ var releaseDate = domain.CustomTime{Time: time.Date(2023, 12, 15, 0, 0, 0, 0, ti
 func (suite *MovieRepoSuite) TestMovieInMemRepository_Store() {
 	tests := []struct {
 		name string
-		m    *domain.CreateMovieInput
+		m    *domain.Movie
 	}{
 		{
 			name: "Success store movie",
-			m: &domain.CreateMovieInput{
+			m: &domain.Movie{
 				Title:       "title",
 				Genre:       domain.Action,
 				Director:    "director",
@@ -63,11 +63,11 @@ func (suite *MovieRepoSuite) TestMovieInMemRepository_Store() {
 func (suite *MovieRepoSuite) TestMovieInMemRepository_GetByID() {
 	tests := []struct {
 		name string
-		m    *domain.CreateMovieInput
+		m    *domain.Movie
 	}{
 		{
 			name: "Success store movie",
-			m: &domain.CreateMovieInput{
+			m: &domain.Movie{
 				Title:       "title",
 				Genre:       domain.Action,
 				Director:    "director",
@@ -90,7 +90,7 @@ func (suite *MovieRepoSuite) TestMovieInMemRepository_GetByID() {
 			assert.False(suite.T(), movie.CreatedAt.IsZero(), "CreatedAt should be set by the database")
 			assert.False(suite.T(), movie.UpdatedAt.IsZero(), "UpdatedAt should be set by the database")
 
-			expectedMovie := domain.Movie{
+			expectedMovie := domain.MovieDetailOutput{
 				Title:       tt.m.Title,
 				Genre:       tt.m.Genre,
 				Director:    tt.m.Director,

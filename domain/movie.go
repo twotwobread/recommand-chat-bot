@@ -40,6 +40,15 @@ func (g Genre) IsValid() bool {
 }
 
 type Movie struct {
+	Title       string     `json:"title" validate:"required,validateEmptyStr,maxlen=10"`
+	Genre       Genre      `json:"genre" validate:"required,validateGenre"`
+	Director    string     `json:"director" validate:"required,validateEmptyStr,maxlen=10"`
+	Actors      []string   `json:"actors" validate:"required"`
+	Description string     `json:"description" validate:"required,validateEmptyStr,maxlen=10"`
+	ReleaseDate CustomTime `json:"release_date"`
+}
+
+type MovieDetailOutput struct {
 	ID          int64      `json:"id"`
 	Title       string     `json:"title"`
 	Genre       Genre      `json:"genre"`
@@ -49,15 +58,6 @@ type Movie struct {
 	ReleaseDate CustomTime `json:"release_date"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	CreatedAt   time.Time  `json:"created_at"`
-}
-
-type CreateMovieInput struct {
-	Title       string     `json:"title"`
-	Genre       Genre      `json:"genre"`
-	Director    string     `json:"director"`
-	Actors      []string   `json:"actors"`
-	Description string     `json:"description"`
-	ReleaseDate CustomTime `json:"release_date"`
 }
 
 type CustomTime struct {
@@ -80,15 +80,13 @@ func (ct *CustomTime) UnmarshalJSON(b []byte) error {
 }
 
 type MovieUsecase interface {
-	Store(ctx context.Context, m *CreateMovieInput) (int64, error)
-	GetByID(ctx context.Context, id int64) (Movie, error)
-	GetAll(ctx context.Context) ([]Movie, error)
+	Store(ctx context.Context, m *Movie) (int64, error)
 }
 
 type MovieRepository interface {
-	Store(ctx context.Context, m *CreateMovieInput) (int64, error)
-	GetByID(ctx context.Context, id int64) (Movie, error)
-	GetAll(ctx context.Context) ([]Movie, error)
+	Store(ctx context.Context, m *Movie) (int64, error)
+	GetByID(ctx context.Context, id int64) (MovieDetailOutput, error)
+	GetAll(ctx context.Context) ([]MovieDetailOutput, error)
 }
 
 /*

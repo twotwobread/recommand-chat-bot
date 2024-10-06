@@ -7,7 +7,6 @@ import (
 
 	"recommand-chat-bot/domain"
 	"recommand-chat-bot/domain/mocks"
-	"recommand-chat-bot/test/assertion"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -15,14 +14,14 @@ import (
 
 type MovieUsercaseSuite struct {
 	suite.Suite
-	m        domain.CreateMovieInput
+	m        domain.Movie
 	ctx      context.Context
 	expected int64
 }
 
 func (suite *MovieUsercaseSuite) SetupSuite() {
 	suite.ctx = context.Background()
-	suite.m = domain.CreateMovieInput{
+	suite.m = domain.Movie{
 		Title:       "title",
 		Genre:       domain.Action,
 		Director:    "director",
@@ -55,48 +54,6 @@ func (suite *MovieUsercaseSuite) TestMovieUsecase_Store() {
 			id, err := movieUsecase.Store(suite.ctx, &suite.m)
 			assert.NoError(suite.T(), err)
 			assert.Equal(suite.T(), suite.expected, id)
-		})
-	}
-}
-
-func (suite *MovieUsercaseSuite) TestMovieUsecase_GetByID() {
-	tests := []struct {
-		name          string
-		mockMovieRepo func() domain.MovieRepository
-	}{
-		{
-			name: "Success movie usecase GetByID",
-			mockMovieRepo: func() domain.MovieRepository {
-				mockMovieRepo := &mocks.MockMovieRepository{}
-				mockMovieRepo.On("GetByID", suite.ctx, suite.expected).Return(domain.Movie{
-					ID:          suite.expected,
-					Title:       suite.m.Title,
-					Genre:       suite.m.Genre,
-					Director:    suite.m.Director,
-					Actors:      suite.m.Actors,
-					Description: suite.m.Description,
-					ReleaseDate: suite.m.ReleaseDate,
-					CreatedAt:   time.Now().UTC(),
-					UpdatedAt:   time.Now().UTC(),
-				}, nil).Once()
-				return mockMovieRepo
-			},
-		},
-	}
-	for _, tt := range tests {
-		suite.Run(tt.name, func() {
-			u := NewMovieUsecase(tt.mockMovieRepo())
-			got, err := u.GetByID(suite.ctx, suite.expected)
-			assert.NoError(suite.T(), err)
-			expectedMovie := domain.Movie{
-				Title:       suite.m.Title,
-				Genre:       suite.m.Genre,
-				Director:    suite.m.Director,
-				Actors:      suite.m.Actors,
-				Description: suite.m.Description,
-				ReleaseDate: suite.m.ReleaseDate,
-			}
-			assertion.AssertMovieInputFields(suite.T(), expectedMovie, got)
 		})
 	}
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func AssertMovieInputFields(t *testing.T, expected domain.Movie, actual domain.Movie) {
+func AssertMovieInputFields(t *testing.T, expected domain.MovieDetailOutput, actual domain.MovieDetailOutput) {
 	vExpected := reflect.ValueOf(expected)
 	vActual := reflect.ValueOf(actual)
 
