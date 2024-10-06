@@ -47,13 +47,15 @@ func getDBClient(profile string) (*ent.Client, error) {
 func restMapping(a *fiber.App, client *ent.Client) {
 	v1 := a.Group("/v1")
 	uc := movie.NewMovieUsecase(repository.NewMovieRepository(client))
-	v1.Use(DependencyMiddleware(&uc))
+	v1.Use(DependencyMiddleware(uc))
 
 	v1.Get("/health", rest.CheckHealth)
 	v1.Post("/movies", rest.Store)
+	v1.Get("/movies", rest.GetAll)
+	v1.Get("/movies/:id", rest.GetByID)
 }
 
-func DependencyMiddleware(useCase *domain.MovieUsecase) fiber.Handler {
+func DependencyMiddleware(useCase domain.MovieUsecase) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		c.Locals("UseCase", useCase)
 		return c.Next()
