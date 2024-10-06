@@ -16,7 +16,7 @@ func NewMovieRepository(client *ent.Client) domain.MovieRepository {
 	return &movieRepository{client: client}
 }
 
-func (r *movieRepository) Store(ctx context.Context, m *domain.CreateMovieInput) (int64, error) {
+func (r *movieRepository) Store(ctx context.Context, m *domain.Movie) (int64, error) {
 	movie, err := r.client.Movie.
 		Create().
 		SetTitle(m.Title).
@@ -33,16 +33,16 @@ func (r *movieRepository) Store(ctx context.Context, m *domain.CreateMovieInput)
 	return movie.ID, nil
 }
 
-func (r *movieRepository) GetByID(ctx context.Context, id int64) (domain.Movie, error) {
+func (r *movieRepository) GetByID(ctx context.Context, id int64) (domain.MovieDetailOutput, error) {
 	m, err := r.client.Movie.
 		Query().
 		Where(movie.ID(id)).
 		Only(ctx)
 	if err != nil {
-		return domain.Movie{}, err
+		return domain.MovieDetailOutput{}, err
 	}
 
-	newMovie := domain.Movie{
+	newMovie := domain.MovieDetailOutput{
 		ID:          m.ID,
 		Title:       m.Title,
 		Genre:       domain.Genre(m.Genre),
@@ -56,15 +56,15 @@ func (r *movieRepository) GetByID(ctx context.Context, id int64) (domain.Movie, 
 	return newMovie, nil
 }
 
-func (r *movieRepository) GetAll(ctx context.Context) ([]domain.Movie, error) {
+func (r *movieRepository) GetAll(ctx context.Context) ([]domain.MovieDetailOutput, error) {
 	gots, err := r.client.Movie.Query().All(ctx)
 	if err != nil {
-		return []domain.Movie{}, err
+		return []domain.MovieDetailOutput{}, err
 	}
 
-	movies := []domain.Movie{}
+	movies := []domain.MovieDetailOutput{}
 	for _, m := range gots {
-		m := domain.Movie{
+		m := domain.MovieDetailOutput{
 			ID:          m.ID,
 			Title:       m.Title,
 			Genre:       domain.Genre(m.Genre),

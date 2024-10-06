@@ -10,7 +10,7 @@ import (
 )
 
 func Store(c fiber.Ctx) error {
-	m := new(domain.CreateMovieInput)
+	m := new(domain.Movie)
 	if err := c.Bind().Body(m); err != nil {
 		return fiber.NewError(
 			fiber.StatusBadRequest,
@@ -18,7 +18,7 @@ func Store(c fiber.Ctx) error {
 	}
 
 	ctx := c.Context()
-	uc := c.Locals("UseCase").(domain.MovieUsecase)
+	uc := c.Locals("MUC").(domain.MovieUsecase)
 	id, err := uc.Store(ctx, m)
 	if err != nil {
 		return fiber.NewError(
@@ -31,7 +31,7 @@ func Store(c fiber.Ctx) error {
 
 func GetByID(c fiber.Ctx) error {
 	ctx := c.Context()
-	uc := c.Locals("UseCase").(domain.MovieUsecase)
+	uc := c.Locals("MRepo").(domain.MovieRepository)
 
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
@@ -52,7 +52,7 @@ func GetByID(c fiber.Ctx) error {
 
 func GetAll(c fiber.Ctx) error {
 	ctx := c.Context()
-	uc := c.Locals("UseCase").(domain.MovieUsecase)
+	uc := c.Locals("MRepo").(domain.MovieRepository)
 
 	movies, err := uc.GetAll(ctx)
 	if err != nil {
