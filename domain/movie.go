@@ -81,12 +81,14 @@ func (ct *CustomTime) UnmarshalJSON(b []byte) error {
 
 type MovieUsecase interface {
 	Store(ctx context.Context, m *Movie) (int64, error)
+	GetRandom(ctx context.Context) (MovieDetailOutput, error)
 }
 
 type MovieRepository interface {
 	Store(ctx context.Context, m *Movie) (int64, error)
 	GetByID(ctx context.Context, id int64) (MovieDetailOutput, error)
 	GetAll(ctx context.Context) ([]MovieDetailOutput, error)
+	GetCount(ctx context.Context) (int, error)
 }
 
 /*
