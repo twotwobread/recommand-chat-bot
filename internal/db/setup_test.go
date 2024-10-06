@@ -21,8 +21,11 @@ func TestSetup_InitPostgreDB(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := InitPostgreDB()
-			assert.NoError(t, err)
-			assert.NotNil(t, got)
+			if assert.NoError(t, err) {
+				assert.NotNil(t, got)
+			} else {
+				t.Fatalf("Check db connection (err: %v)", err)
+			}
 		})
 	}
 }
