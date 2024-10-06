@@ -32,3 +32,12 @@ func (u *movieUsecase) GetByID(ctx context.Context, id int64) (domain.Movie, err
 
 	return got, nil
 }
+
+func (u *movieUsecase) GetAll(ctx context.Context) ([]domain.Movie, error) {
+	got, err := u.repo.GetAll(ctx)
+	if err != nil {
+		return []domain.Movie{}, fmt.Errorf("failed to get movies - %v", err)
+	}
+
+	return got, nil
+}
