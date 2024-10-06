@@ -40,11 +40,11 @@ func (g Genre) IsValid() bool {
 }
 
 type Movie struct {
-	Title       string     `json:"title"`
-	Genre       Genre      `json:"genre"`
-	Director    string     `json:"director"`
-	Actors      []string   `json:"actors"`
-	Description string     `json:"description"`
+	Title       string     `json:"title" validate:"required,validateEmptyStr,maxlen=10"`
+	Genre       Genre      `json:"genre" validate:"required,validateGenre"`
+	Director    string     `json:"director" validate:"required,validateEmptyStr,maxlen=10"`
+	Actors      []string   `json:"actors" validate:"required"`
+	Description string     `json:"description" validate:"required,validateEmptyStr,maxlen=10"`
 	ReleaseDate CustomTime `json:"release_date"`
 }
 
