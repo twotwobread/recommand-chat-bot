@@ -18,7 +18,7 @@ func NewMovieUsecase(repo domain.MovieRepository) domain.MovieUsecase {
 func (u *movieUsecase) Store(ctx context.Context, m *domain.CreateMovieInput) (int64, error) {
 	got, err := u.repo.Store(ctx, m)
 	if err != nil {
-		return 0, fmt.Errorf("failed to store movie - %v, input: %v", err, m)
+		return -1, fmt.Errorf("failed to store movie - %v, input: %v", err, m)
 	}
 
 	return got, nil

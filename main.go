@@ -4,9 +4,12 @@ import (
 	"log"
 	"os"
 
+	"recommand-chat-bot/domain"
 	"recommand-chat-bot/internal/db"
 	"recommand-chat-bot/internal/ent"
+	"recommand-chat-bot/internal/repository"
 	"recommand-chat-bot/internal/rest"
+	"recommand-chat-bot/movie"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"
@@ -25,7 +28,7 @@ func main() {
 		log.Fatalf("Error setup db: %v", err)
 	}
 
-	restMapping(app)
+	restMapping(app, client)
 	log.Fatal(app.Listen(":5003"))
 }
 
@@ -41,7 +44,18 @@ func getDBClient(profile string) (*ent.Client, error) {
 	return db.InitInMemDB()
 }
 
-func restMapping(a *fiber.App) {
+func restMapping(a *fiber.App, client *ent.Client) {
 	v1 := a.Group("/v1")
+	uc := movie.NewMovieUsecase(repository.NewMovieRepository(client))
+	v1.Use(DependencyMiddleware(&uc))
+
 	v1.Get("/health", rest.CheckHealth)
+	v1.Post("/movies", rest.Store)
+}
+
+func DependencyMiddleware(useCase *domain.MovieUsecase) fiber.Handler {
+	return func(c fiber.Ctx) error {
+		c.Locals("UseCase", useCase)
+		return c.Next()
+	}
 }
