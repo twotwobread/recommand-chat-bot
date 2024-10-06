@@ -73,7 +73,9 @@ func restMapping(app *fiber.App, client *ent.Client) {
 	})
 
 	v1.Get("/health", rest.CheckHealth)
+
 	v1.Post("/movies", rest.Store)
 	v1.Get("/movies", rest.GetAll)
+	v1.Get("/movies/random", rest.GetRandom)
 	v1.Get("/movies/:id", rest.GetByID)
 }

@@ -3,6 +3,8 @@ package movie
 import (
 	"context"
 	"fmt"
+	"math/rand"
+	"time"
 
 	"recommand-chat-bot/domain"
 )
@@ -24,20 +26,23 @@ func (u *movieUsecase) Store(ctx context.Context, m *domain.Movie) (int64, error
 	return got, nil
 }
 
-func (u *movieUsecase) GetByID(ctx context.Context, id int64) (domain.MovieDetailOutput, error) {
-	got, err := u.repo.GetByID(ctx, id)
+func (u movieUsecase) GetRandom(ctx context.Context) (domain.MovieDetailOutput, error) {
+	cnt, err := u.repo.GetCount(ctx)
 	if err != nil {
-		return domain.MovieDetailOutput{}, fmt.Errorf("failed to store movie - %v, input: %v", err, id)
+		return domain.MovieDetailOutput{}, fmt.Errorf("failed to get movie count - %v", err)
+	}
+	if cnt <= 0 {
+		return domain.MovieDetailOutput{}, fmt.Errorf("failed to get movie count - movie count is zero")
 	}
 
-	return got, nil
-}
+	for {
+		seed := time.Now().UnixNano()
+		r := rand.New(rand.NewSource(seed))
+		rNum := int64(r.Intn(cnt) + 1)
 
-func (u *movieUsecase) GetAll(ctx context.Context) ([]domain.MovieDetailOutput, error) {
-	got, err := u.repo.GetAll(ctx)
-	if err != nil {
-		return []domain.MovieDetailOutput{}, fmt.Errorf("failed to get movies - %v", err)
+		m, err := u.repo.GetByID(ctx, rNum)
+		if err == nil {
+			return m, nil
+		}
 	}
-
-	return got, nil
 }

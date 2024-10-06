@@ -79,3 +79,12 @@ func (r *movieRepository) GetAll(ctx context.Context) ([]domain.MovieDetailOutpu
 	}
 	return movies, nil
 }
+
+func (r *movieRepository) GetCount(ctx context.Context) (int, error) {
+	gots, err := r.client.Movie.Query().Count(ctx)
+	if err != nil {
+		return -1, err
+	}
+
+	return gots, err
+}
