@@ -55,3 +55,27 @@ func (r *movieRepository) GetByID(ctx context.Context, id int64) (domain.Movie, 
 	}
 	return newMovie, nil
 }
+
+func (r *movieRepository) GetAll(ctx context.Context) ([]domain.Movie, error) {
+	gots, err := r.client.Movie.Query().All(ctx)
+	if err != nil {
+		return []domain.Movie{}, err
+	}
+
+	movies := []domain.Movie{}
+	for _, m := range gots {
+		m := domain.Movie{
+			ID:          m.ID,
+			Title:       m.Title,
+			Genre:       domain.Genre(m.Genre),
+			Director:    m.Director,
+			Actors:      m.Actors,
+			Description: m.Description,
+			ReleaseDate: domain.CustomTime{Time: m.ReleaseDate},
+			UpdatedAt:   m.UpdatedAt,
+			CreatedAt:   m.CreatedAt,
+		}
+		movies = append(movies, m)
+	}
+	return movies, nil
+}
