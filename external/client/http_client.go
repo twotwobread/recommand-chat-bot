@@ -5,18 +5,15 @@ import (
 	"sync"
 	"time"
 
+	"recommand-chat-bot/domain"
+
 	"github.com/valyala/fasthttp"
 )
 
 var (
-	instance HttpClient
+	instance domain.HttpClient
 	once     sync.Once
 )
-
-type HttpClient interface {
-	Get(url string, headers map[string]string, timeout time.Duration) (int, string, error)
-	Post(url string, payload any, headers map[string]string, timeout time.Duration) (int, string, error)
-}
 
 type httpClient struct {
 	Client *fasthttp.Client
@@ -43,7 +40,7 @@ func (c httpClient) Post(url string, payload any, headers map[string]string, tim
 	return fasthttp.StatusNotImplemented, "", fmt.Errorf("Yet Implemented")
 }
 
-func NewHttpClient() HttpClient {
+func NewHttpClient() domain.HttpClient {
 	once.Do(func() {
 		instance = &httpClient{
 			Client: &fasthttp.Client{},
