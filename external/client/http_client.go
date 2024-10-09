@@ -19,7 +19,7 @@ type httpClient struct {
 	Client *fasthttp.Client
 }
 
-func (c httpClient) Get(url string, headers map[string]string, timeout time.Duration) (int, string, error) {
+func (c httpClient) Get(url string, headers map[string]string, timeout time.Duration) (int, []byte, error) {
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI(url)
 	req.SetTimeout(timeout)
@@ -33,11 +33,11 @@ func (c httpClient) Get(url string, headers map[string]string, timeout time.Dura
 		return fasthttp.StatusInternalServerError, "", err
 	}
 
-	return resp.StatusCode(), string(resp.Body()), nil
+	return resp.StatusCode(), resp.Body(), nil
 }
 
-func (c httpClient) Post(url string, payload any, headers map[string]string, timeout time.Duration) (int, string, error) {
-	return fasthttp.StatusNotImplemented, "", fmt.Errorf("Yet Implemented")
+func (c httpClient) Post(url string, payload any, headers map[string]string, timeout time.Duration) (int, []byte, error) {
+	return fasthttp.StatusNotImplemented, []byte{}, fmt.Errorf("Yet Implemented")
 }
 
 func NewHttpClient() domain.HttpClient {
