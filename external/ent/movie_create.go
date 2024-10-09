@@ -6,7 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"recommand-chat-bot/internal/ent/movie"
+	"recommand-chat-bot/external/ent/movie"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"

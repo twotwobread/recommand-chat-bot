@@ -6,8 +6,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"recommand-chat-bot/internal/ent/movie"
-	"recommand-chat-bot/internal/ent/predicate"
+	"recommand-chat-bot/external/ent/movie"
+	"recommand-chat-bot/external/ent/predicate"
 	"sync"
 	"time"
 

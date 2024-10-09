@@ -5,7 +5,7 @@ package hook
 import (
 	"context"
 	"fmt"
-	"recommand-chat-bot/internal/ent"
+	"recommand-chat-bot/external/ent"
 )
 
 // The MovieFunc type is an adapter to allow the use of ordinary

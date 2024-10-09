@@ -4,8 +4,8 @@ package ent
 
 import (
 	"context"
-	"recommand-chat-bot/internal/ent/movie"
-	"recommand-chat-bot/internal/ent/predicate"
+	"recommand-chat-bot/external/ent/movie"
+	"recommand-chat-bot/external/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"

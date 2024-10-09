@@ -5,11 +5,11 @@ package enttest
 import (
 	"context"
 
-	"recommand-chat-bot/internal/ent"
+	"recommand-chat-bot/external/ent"
 	// required by schema hooks.
-	_ "recommand-chat-bot/internal/ent/runtime"
+	_ "recommand-chat-bot/external/ent/runtime"
 
-	"recommand-chat-bot/internal/ent/migrate"
+	"recommand-chat-bot/external/ent/migrate"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

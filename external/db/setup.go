@@ -8,7 +8,7 @@ import (
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 
-	"recommand-chat-bot/internal/ent"
+	"recommand-chat-bot/external/ent"
 )
 
 func InitInMemDB() (*ent.Client, error) {
