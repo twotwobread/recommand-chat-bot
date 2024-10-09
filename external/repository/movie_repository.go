@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"recommand-chat-bot/domain"
-	"recommand-chat-bot/internal/ent"
-	"recommand-chat-bot/internal/ent/movie"
+	"recommand-chat-bot/external/ent"
+	"recommand-chat-bot/external/ent/movie"
 )
 
 type movieRepository struct {

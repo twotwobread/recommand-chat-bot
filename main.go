@@ -5,10 +5,10 @@ import (
 	"os"
 
 	vld "recommand-chat-bot/domain/validator"
-	"recommand-chat-bot/internal/db"
-	"recommand-chat-bot/internal/ent"
-	"recommand-chat-bot/internal/repository"
-	"recommand-chat-bot/internal/rest"
+	"recommand-chat-bot/external/db"
+	"recommand-chat-bot/external/ent"
+	"recommand-chat-bot/external/repository"
+	"recommand-chat-bot/external/rest"
 	"recommand-chat-bot/movie"
 
 	"github.com/go-playground/validator"

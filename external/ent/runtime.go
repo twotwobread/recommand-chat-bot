@@ -3,8 +3,8 @@
 package ent
 
 import (
-	"recommand-chat-bot/internal/ent/movie"
-	"recommand-chat-bot/internal/ent/schema"
+	"recommand-chat-bot/external/ent/movie"
+	"recommand-chat-bot/external/ent/schema"
 	"time"
 )
 

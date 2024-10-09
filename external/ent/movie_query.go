@@ -6,8 +6,8 @@ import (
 	"context"
 	"fmt"
 	"math"
-	"recommand-chat-bot/internal/ent/movie"
-	"recommand-chat-bot/internal/ent/predicate"
+	"recommand-chat-bot/external/ent/movie"
+	"recommand-chat-bot/external/ent/predicate"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

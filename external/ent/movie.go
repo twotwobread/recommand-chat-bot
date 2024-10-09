@@ -5,7 +5,7 @@ package ent
 import (
 	"encoding/json"
 	"fmt"
-	"recommand-chat-bot/internal/ent/movie"
+	"recommand-chat-bot/external/ent/movie"
 	"strings"
 	"time"
 

@@ -9,9 +9,9 @@ import (
 	"log"
 	"reflect"
 
-	"recommand-chat-bot/internal/ent/migrate"
+	"recommand-chat-bot/external/ent/migrate"
 
-	"recommand-chat-bot/internal/ent/movie"
+	"recommand-chat-bot/external/ent/movie"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"

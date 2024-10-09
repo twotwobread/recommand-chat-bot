@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"recommand-chat-bot/domain"
-	"recommand-chat-bot/internal/db"
-	"recommand-chat-bot/internal/ent"
+	"recommand-chat-bot/external/db"
+	"recommand-chat-bot/external/ent"
 	"recommand-chat-bot/test/assertion"
 )
 

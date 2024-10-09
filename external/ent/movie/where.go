@@ -3,7 +3,7 @@
 package movie
 
 import (
-	"recommand-chat-bot/internal/ent/predicate"
+	"recommand-chat-bot/external/ent/predicate"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
