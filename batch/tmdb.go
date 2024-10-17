@@ -54,7 +54,7 @@ func (t tmdbBatchUsecase) fetchAllMovies(startDate, endDate string) []TMDBMovie 
 			break
 		}
 
-		page++
+		page += 1
 	}
 
 	return allMovies
@@ -62,9 +62,8 @@ func (t tmdbBatchUsecase) fetchAllMovies(startDate, endDate string) []TMDBMovie 
 
 func (t tmdbBatchUsecase) fetchPage(page int, startDate, endDate string) TMDBResponse {
 	params := url.Values{}
-	params.Set("language", "en-US")
 	params.Set("sort_by", "release_date.desc")
-	params.Set("include_adult", "false")
+	params.Set("include_adult", "true")
 	params.Set("include_video", "false")
 	params.Set("page", fmt.Sprintf("%d", page))
 	params.Set("primary_release_date.gte", startDate)
