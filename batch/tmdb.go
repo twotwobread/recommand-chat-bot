@@ -3,13 +3,13 @@ package batch
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/url"
 	"os"
 	"time"
 
 	"recommand-chat-bot/domain"
 
+	"github.com/gofiber/fiber/v3/log"
 	"github.com/valyala/fasthttp"
 )
 
@@ -47,24 +47,27 @@ func (t tmdbBatchUsecase) fetchAllMovies(startDate, endDate string) []TMDBMovie 
 	page := 1
 
 	for {
-		response := t.fetchPage(page, startDate, endDate)
+		response, err := t.fetchPage(page, startDate, endDate)
+		if err != nil {
+			log.Infof("Tmdb client error: %v", err)
+		}
+
 		allMovies = append(allMovies, response.Results...)
 
 		if page >= response.TotalPages {
 			break
 		}
 
-		page++
+		page += 1
 	}
 
 	return allMovies
 }
 
-func (t tmdbBatchUsecase) fetchPage(page int, startDate, endDate string) TMDBResponse {
+func (t tmdbBatchUsecase) fetchPage(page int, startDate, endDate string) (TMDBResponse, error) {
 	params := url.Values{}
-	params.Set("language", "en-US")
 	params.Set("sort_by", "release_date.desc")
-	params.Set("include_adult", "false")
+	params.Set("include_adult", "true")
 	params.Set("include_video", "false")
 	params.Set("page", fmt.Sprintf("%d", page))
 	params.Set("primary_release_date.gte", startDate)
@@ -78,22 +81,22 @@ func (t tmdbBatchUsecase) fetchPage(page int, startDate, endDate string) TMDBRes
 			"accept":        "application/json",
 			"Authorization": fmt.Sprintf("Bearer %s", tmdbToken),
 		},
-		time.Duration(30),
+		time.Duration(30*time.Second),
 	)
 	if err != nil {
-		log.Fatalf("Error fetching data: %v", err)
+		return TMDBResponse{}, fmt.Errorf("Tmdb client error: %v", err)
 	}
 
 	if statusCode != fasthttp.StatusOK {
-		log.Fatalf("Unexpected status code: %d", statusCode)
+		return TMDBResponse{}, fmt.Errorf("Tmdb client unexpected status code: %d", statusCode)
 	}
 
 	var response TMDBResponse
 	if err := json.Unmarshal(body, &response); err != nil {
-		log.Fatalf("Error unmarshalling JSON: %v", err)
+		return TMDBResponse{}, fmt.Errorf("Error unmarshalling JSON: %v", err)
 	}
 
-	return response
+	return response, nil
 }
 
 func NewTmdbBatchUsecase(client domain.HttpClient) domain.BatchUsecase {

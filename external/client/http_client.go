@@ -30,7 +30,7 @@ func (c httpClient) Get(url string, headers map[string]string, timeout time.Dura
 
 	resp := fasthttp.AcquireResponse()
 	if err := c.Client.Do(req, resp); err != nil {
-		return fasthttp.StatusInternalServerError, "", err
+		return fasthttp.StatusInternalServerError, []byte{}, err
 	}
 
 	return resp.StatusCode(), resp.Body(), nil
